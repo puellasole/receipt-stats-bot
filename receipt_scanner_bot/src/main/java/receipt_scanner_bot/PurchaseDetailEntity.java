@@ -19,6 +19,9 @@ public class PurchaseDetailEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @Column(name = "chat_id", nullable = false)
+    private Long chatId;
+    
     @Column(name = "product_name", nullable = false)
     private String productName;
     
@@ -33,8 +36,9 @@ public class PurchaseDetailEntity {
     
     public PurchaseDetailEntity() {}
     
-    public PurchaseDetailEntity(String productName, Integer quantity, 
+    public PurchaseDetailEntity(Long chatId, String productName, Integer quantity, 
                                BigDecimal price, LocalDate purchaseDate) {
+    	this.chatId = chatId;
         this.productName = productName;
         this.quantity = quantity;
         this.price = price;

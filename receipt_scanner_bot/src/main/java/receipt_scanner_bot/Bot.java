@@ -40,7 +40,7 @@ public class Bot extends TelegramLongPollingBot {
 		var message = update.getMessage().getText();
 		var chatId = update.getMessage().getChatId();
 		var userState = userSessionService.getUserState(chatId);
-        
+        		
         if (userState == UserState.WAITING_FOR_RECEIPT) {
             processReceiptQr(chatId, message);
             return;
@@ -73,7 +73,7 @@ public class Bot extends TelegramLongPollingBot {
 	private void processProductStat(Long chatId, String productName) {
 		try {
 			userSessionService.clearUserState(chatId);
-			String result = service.getStatsForOneProduct(productName);
+			String result = service.getStatsForOneProduct(chatId, productName);
 			sendMessage(chatId, result);
 		} catch (Exception e) {
 			sendMessage(chatId, "❌ Ошибка при обработке продукта: " + e.getMessage());
@@ -88,7 +88,7 @@ public class Bot extends TelegramLongPollingBot {
             userSessionService.clearUserState(chatId);
             
             // Обрабатываем QR-код
-            String result = service.uploadReceipt(qrCode);
+            String result = service.uploadReceipt(chatId, qrCode);
             sendMessage(chatId, result);
             
         } catch (Exception e) {
@@ -99,7 +99,7 @@ public class Bot extends TelegramLongPollingBot {
 
 	private void statsCommand(Long chatId) {
 		
-		String statres = service.getStatsForAllProducts();
+		String statres = service.getStatsForAllProducts(chatId);
 		sendMessage(chatId, statres);
 	}
 	

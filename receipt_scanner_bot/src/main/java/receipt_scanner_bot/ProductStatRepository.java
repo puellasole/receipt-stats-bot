@@ -11,11 +11,18 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProductStatRepository extends JpaRepository<ProductStatEntity, Long> {
-    
+    /*
     List<ProductStatEntity> findByProductNameOrderByStatDateAsc(String productName);
     
     @Query("SELECT ps FROM ProductStatEntity ps WHERE ps.productName = :productName " +
            "ORDER BY ps.statDate DESC LIMIT 1")
     ProductStatEntity findLatestByProductName(@Param("productName") String productName);
+    */
+	List<ProductStatEntity> findByChatIdAndProductNameOrderByStatDateAsc(Long chatId, String productName);
+	
+    
+    @Query("SELECT ps FROM ProductStatEntity ps WHERE ps.chatId = :chatId AND ps.productName = :productName " +
+           "ORDER BY ps.statDate DESC LIMIT 1")
+    ProductStatEntity findLatestByChatIdAndProductName(@Param("chatId") Long chatId, @Param("productName") String productName);
 }
 

@@ -18,6 +18,9 @@ public class ProductStatEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @Column(name = "chat_id", nullable = false) 
+    private Long chatId;
+    
     @Column(name = "product_name", nullable = false)
     private String productName;
     
@@ -29,7 +32,8 @@ public class ProductStatEntity {
 
     public ProductStatEntity() {}
     
-    public ProductStatEntity(String productName, BigDecimal unitPrice, LocalDate statDate) {
+    public ProductStatEntity(Long chatId, String productName, BigDecimal unitPrice, LocalDate statDate) {
+    	this.chatId = chatId;
         this.productName = productName;
         this.unitPrice = unitPrice;
         this.statDate = statDate;

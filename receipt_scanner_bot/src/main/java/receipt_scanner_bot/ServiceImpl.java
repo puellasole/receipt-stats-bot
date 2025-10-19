@@ -25,27 +25,33 @@ public class ServiceImpl implements ReceiptService {
     }
     
     @Override
-    public String getStatsForAllProducts() {
-    	List<ProductStatsDTO> stats = databaseService.getStatsForAllProducts();
+    public String getStatsForAllProducts(Long chatId) {
+    	List<ProductStatsDTO> stats = databaseService.getStatsForAllProducts(chatId);
         return statsFormatter.formatAllProductsStats(stats);
     }
     
     @Override
-    public String getStatsForOneProduct(String productName) {
-    	Optional<ProductDetailStatsDTO> stats = databaseService.getStatsForProduct(productName);
+    public String getStatsForOneProduct(Long chatId, String productName) {
+    	Optional<ProductDetailStatsDTO> stats = databaseService.getStatsForProduct(chatId, productName);
         return stats.map(statsFormatter::formatProductDetailStats)
                    .orElse("❌ Продукт '" + productName + "' не найден в базе данных.\n\n" +
                           "💡 Попробуйте поискать похожие названия или проверьте правильность написания.");
     }
     
     @Override
-    public String uploadReceipt(String checkqrcode) {
+    public String uploadReceipt(Long chatId, String checkqrcode) {
     	
     	try {
+    		System.out.println("Вошли в метод аплоуд");
             String responsexml = client.getReceiptData(checkqrcode);
+            System.out.println("Строка ответа с сервера" + responsexml);
             List<Product> products = parser.parse(responsexml);
-            
-            databaseService.saveProducts(products);
+            for(Product p : products) {
+            	System.out.println(p.toString());
+            }
+            System.out.println("Конвертация выполнена");
+            databaseService.saveProducts(chatId, products);
+            System.out.println("Продукты сохранены");
             return statsFormatter.formatProducts(products);
             
         } catch (IOException e) {
