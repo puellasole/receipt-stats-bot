@@ -1,5 +1,6 @@
 package receipt_scanner_bot;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -30,13 +31,16 @@ public class Parser {
             JSONObject item = items.getJSONObject(i);
             
             String name = item.getString("name");
-            int quantity = item.getInt("quantity");
+            double quantity = item.getDouble("quantity");
             double pricePerUnit = item.getDouble("price") / 100.0;
             double totalPrice = item.getDouble("sum") / 100.0;
                         
-            products.add(new Product(name, quantity, pricePerUnit, totalPrice, date));
+            products.add(new Product(name,
+            		BigDecimal.valueOf(quantity),
+            		BigDecimal.valueOf(pricePerUnit),
+            		BigDecimal.valueOf(totalPrice), 
+            		date));
         }
-        
         return products;
 	}
 	

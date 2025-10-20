@@ -1,32 +1,41 @@
 package receipt_scanner_bot;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class Product {
 	
 	private String name;
-    private int quantity;
-    private double pricePerUnit; 
-    private double totalPrice; 
+    private BigDecimal quantity;
+    private BigDecimal pricePerUnit; 
+    private BigDecimal totalPrice; 
     private LocalDate date;
+    private boolean isWeightProduct;
 
-    public Product(String name, int quantity, double pricePerUnit, double totalPrice, LocalDate date) {
+    public Product(String name,
+    		BigDecimal quantity,
+    		BigDecimal pricePerUnit,
+    		BigDecimal totalPrice,
+    		LocalDate date) {
         this.name = name;
         this.quantity = quantity;
         this.totalPrice = totalPrice;
-        this.pricePerUnit = calculatePricePerUnit();
+        this.pricePerUnit = pricePerUnit;
         this.date = date;
+        this.isWeightProduct = isWeightProduct();
     }
 
     public String getName() { return name; }
-    public int getQuantity() { return quantity; }
-    public double getPricePerUnit() { return pricePerUnit; }
-    public double getTotalPrice() { return totalPrice; }
+    public BigDecimal getQuantity() { return quantity; }
+    public BigDecimal getPricePerUnit() { return pricePerUnit; }
+    public BigDecimal getTotalPrice() { return totalPrice; }
     public LocalDate getDate() { return date; }
-    
-    private double calculatePricePerUnit() {
-    	return totalPrice / quantity;
+    public boolean getIsWeightProduct() { return isWeightProduct; }
+
+    public boolean isWeightProduct() {
+        // Проверяем есть ли дробная часть
+        return quantity.remainder(BigDecimal.ONE).compareTo(BigDecimal.ZERO) != 0;
     }
     
     @Override
@@ -36,9 +45,19 @@ public class Product {
         
         // Ограничиваем название продукта до 2 слов
         String limitedName = Utils.limitWords(name, 2);
+        String formattedQuantity = isWeightProduct ? "кг." : "шт.";
         
-        return String.format("%s: %d шт. х %.2f руб = %.2f руб, дата: %s", 
-        		limitedName, quantity, pricePerUnit, totalPrice, formattedDate);
+        String quantityValue = isWeightProduct() ? 
+        	    String.format("%.3f", quantity.doubleValue()) : 
+        	    String.valueOf(quantity.intValue());
+        
+        return String.format("%s: %s %s х %.2f руб = %.2f руб, дата: %s", 
+        		limitedName,
+        		quantityValue,
+        		formattedQuantity,
+        		pricePerUnit.doubleValue(),
+        		totalPrice.doubleValue(),
+        		formattedDate);
     }
 
 }

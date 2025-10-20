@@ -12,8 +12,7 @@ import okhttp3.logging.HttpLoggingInterceptor.Level;
 
 @Configuration
 public class Config {
-	//is there any reasons to add interceptor
-	//are there ways with annotation?
+
 	private HttpLoggingInterceptor log = new HttpLoggingInterceptor().setLevel(Level.BASIC);
 	
 	@Bean
