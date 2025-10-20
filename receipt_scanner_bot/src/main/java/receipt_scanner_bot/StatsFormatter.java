@@ -21,8 +21,16 @@ public class StatsFormatter {
         
         int rank = 1;
         for (ProductStatsDTO stat : stats) {
-            result.append(String.format("%d.  →  %.2f ₽    (%d шт.)\n", 
-                rank, stat.totalAmount().doubleValue(), stat.totalQuantity()));
+        	String quantityText;
+            if (stat.isWeightProduct()) {
+                // Для весовых: "1.250 кг" 
+                quantityText = String.format("%.3f кг", stat.totalQuantity().doubleValue());
+            } else {
+                // Для штучных: "5 шт."
+                quantityText = String.format("%.0f шт.", stat.totalQuantity().doubleValue());
+            }
+            result.append(String.format("%d.  →  %.2f ₽    (%s)\n", 
+                rank, stat.totalAmount().doubleValue(), quantityText));
             result.append(String.format("   %s\n\n", stat.productName()));
             rank++;
         }

@@ -53,7 +53,6 @@ public class DatabaseService {
     public List<ProductStatsDTO> getStatsForAllProducts(Long chatId) {
         List<PurchaseDetailEntity> allPurchases = purchaseDetailRepository
         		.findByChatIdOrderByPurchaseDateAscProductNameAsc(chatId);
-        		//.findAllByOrderByPurchaseDateAscProductNameAsc();
         
         if (allPurchases.isEmpty()) {
             return List.of(); // Возвращаем пустой список вместо строки
@@ -65,14 +64,21 @@ public class DatabaseService {
                 Collectors.collectingAndThen(
                     Collectors.toList(),
                     list -> {
-                        int totalQuantity = list.stream().mapToInt(PurchaseDetailEntity::getQuantity).sum();
+                    	BigDecimal totalQuantity = list.stream()
+                    			.map(PurchaseDetailEntity::getQuantity)
+                    			.reduce(BigDecimal.ZERO, BigDecimal::add);
+                    	
                         BigDecimal totalAmount = list.stream()
                             .map(PurchaseDetailEntity::getPrice)
                             .reduce(BigDecimal.ZERO, BigDecimal::add);
+                        
+                        boolean isWeightProduct = list.get(0).isWeightProduct();
+                        
                         return new ProductStatsDTO(
                             list.get(0).getProductName(), // Берем имя из любой записи
                             totalQuantity, 
-                            totalAmount
+                            totalAmount,
+                            isWeightProduct
                         );
                     }
                 )
@@ -86,7 +92,6 @@ public class DatabaseService {
     public Optional<ProductDetailStatsDTO> getStatsForProduct(Long chatId, String productName) {
         List<ProductStatEntity> stats = productStatRepository
         		.findByChatIdAndProductNameOrderByStatDateAsc(chatId, productName);
-        		//.findByProductNameOrderByStatDateAsc(productName);
         
         if (stats.isEmpty()) {
             return Optional.empty();
@@ -201,8 +206,9 @@ public class DatabaseService {
         	chatId,
             product.getName(),
             product.getQuantity(),
-            BigDecimal.valueOf(product.getTotalPrice()),
-            product.getDate()
+            product.getTotalPrice(),
+            product.getDate(),
+            product.getIsWeightProduct()
         );
     }
     
@@ -210,7 +216,7 @@ public class DatabaseService {
         return new ProductStatEntity(
         	chatId,
             product.getName(),
-            BigDecimal.valueOf(product.getPricePerUnit()),
+            product.getPricePerUnit(),
             product.getDate()
         );
     }

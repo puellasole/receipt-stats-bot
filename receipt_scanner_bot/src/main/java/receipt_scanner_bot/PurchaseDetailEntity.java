@@ -24,9 +24,9 @@ public class PurchaseDetailEntity {
     
     @Column(name = "product_name", nullable = false)
     private String productName;
-    
-    @Column(nullable = false)
-    private Integer quantity;
+
+    @Column(nullable = false, precision = 10, scale = 3)
+    private BigDecimal quantity;
     
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
@@ -34,30 +34,40 @@ public class PurchaseDetailEntity {
     @Column(name = "purchase_date", nullable = false)
     private LocalDate purchaseDate;
     
-    public PurchaseDetailEntity() {}
+    @Column(name = "is_weight_product", nullable = false)
+    private boolean isWeightProduct;
     
-    public PurchaseDetailEntity(Long chatId, String productName, Integer quantity, 
-                               BigDecimal price, LocalDate purchaseDate) {
+    public PurchaseDetailEntity() {}
+    public PurchaseDetailEntity(Long chatId,
+    		String productName,
+    		BigDecimal quantity, 
+            BigDecimal price,
+            LocalDate purchaseDate,
+            boolean isWeightProduct) {
     	this.chatId = chatId;
         this.productName = productName;
         this.quantity = quantity;
         this.price = price;
         this.purchaseDate = purchaseDate;
+        this.isWeightProduct = isWeightProduct;
     }
     
     public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+	public void setId(Long id) { this.id = id; }
     
     public String getProductName() { return productName; }
     public void setProductName(String productName) { this.productName = productName; }
     
-    public Integer getQuantity() { return quantity; }
-    public void setInteger(Integer quantity) { this.quantity = quantity; }
+    public BigDecimal getQuantity() { return quantity; }
+    public void setInteger(BigDecimal quantity) { this.quantity = quantity; }
     
     public BigDecimal getPrice() { return price; }
     public void setPrice(BigDecimal price) { this.price = price; }
     
     public LocalDate getPurchaseDate() { return purchaseDate; }
     public void setPurchaseDate(LocalDate purchaseDate) { this.purchaseDate = purchaseDate; }
+    
+    public boolean isWeightProduct() { return isWeightProduct; }
+	public void setWeightProduct(boolean isWeightProduct) { this.isWeightProduct = isWeightProduct; }
 
 }
