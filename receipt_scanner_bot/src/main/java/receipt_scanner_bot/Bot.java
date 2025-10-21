@@ -72,6 +72,15 @@ public class Bot extends TelegramLongPollingBot {
 	
 	private void processProductStat(Long chatId, String productName) {
 		try {
+	        String result = service.getStatsForOneProduct(chatId, productName);
+	        sendMessage(chatId, result);
+	    } catch (Exception e) {
+	        sendMessage(chatId, "❌ Ошибка при обработке продукта: " + e.getMessage());
+	    } finally {
+	        userSessionService.clearUserState(chatId);
+	    }
+		/*
+		try {
 			userSessionService.clearUserState(chatId);
 			String result = service.getStatsForOneProduct(chatId, productName);
 			sendMessage(chatId, result);
@@ -79,22 +88,21 @@ public class Bot extends TelegramLongPollingBot {
 			sendMessage(chatId, "❌ Ошибка при обработке продукта: " + e.getMessage());
             userSessionService.clearUserState(chatId);
 		}
-		
+		*/
 	}
 	
 	private void processReceiptQr(Long chatId, String qrCode) {
-        try {
-            // Сбрасываем состояние
-            userSessionService.clearUserState(chatId);
-            
-            // Обрабатываем QR-код
-            String result = service.uploadReceipt(chatId, qrCode);
-            sendMessage(chatId, result);
-            
-        } catch (Exception e) {
-            sendMessage(chatId, "❌ Ошибка при обработке чека: " + e.getMessage());
-            userSessionService.clearUserState(chatId);
-        }
+		try {
+	        // Обрабатываем QR-код
+	        String result = service.uploadReceipt(chatId, qrCode);
+	        sendMessage(chatId, result);
+	        
+	    } catch (Exception e) {
+	        sendMessage(chatId, "❌ Ошибка при обработке чека: " + e.getMessage());
+	    } finally {
+	        // ⚡ Сбрасываем состояние ПОСЛЕ обработки!
+	        userSessionService.clearUserState(chatId);
+	    }
     }
 
 	private void statsCommand(Long chatId) {

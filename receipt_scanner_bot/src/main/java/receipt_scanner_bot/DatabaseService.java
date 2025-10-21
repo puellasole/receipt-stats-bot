@@ -3,6 +3,8 @@ package receipt_scanner_bot;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import receipt_scanner_bot.dto.PriceHistoryDTO;
 import receipt_scanner_bot.dto.ProductDetailStatsDTO;
 import receipt_scanner_bot.dto.ProductStatsDTO;
@@ -22,6 +24,9 @@ public class DatabaseService {
     
     private final PurchaseDetailRepository purchaseDetailRepository;
     private final ProductStatRepository productStatRepository;
+    
+    @PersistenceContext
+    private EntityManager entityManager;
     
     public DatabaseService(PurchaseDetailRepository purchaseDetailRepository,
                           ProductStatRepository productStatRepository) {
@@ -51,6 +56,9 @@ public class DatabaseService {
     
     @Transactional(readOnly = true)
     public List<ProductStatsDTO> getStatsForAllProducts(Long chatId) {
+    	
+    	entityManager.clear();
+    	
         List<PurchaseDetailEntity> allPurchases = purchaseDetailRepository
         		.findByChatIdOrderByPurchaseDateAscProductNameAsc(chatId);
         
