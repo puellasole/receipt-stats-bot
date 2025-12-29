@@ -1,4 +1,4 @@
-package receipt_scanner_bot;
+package receipt_scanner_bot.bot;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +9,10 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
+import receipt_scanner_bot.model.UserState;
+import receipt_scanner_bot.service.ReceiptService;
+import receipt_scanner_bot.service.UserSessionService;
 
 @Component
 public class Bot extends TelegramLongPollingBot {

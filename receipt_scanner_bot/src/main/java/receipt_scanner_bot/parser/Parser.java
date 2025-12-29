@@ -1,4 +1,4 @@
-package receipt_scanner_bot;
+package receipt_scanner_bot.parser;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -11,9 +11,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
+import receipt_scanner_bot.model.Product;
+
 @Component
 public class Parser {
-	List<Product> parse(String jsonToParse){
+	public List<Product> parse(String jsonToParse){
 		final DateTimeFormatter API_DATE_FORMATTER = 
     	        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         List<Product> products = new ArrayList<>();

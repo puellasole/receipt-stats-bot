@@ -1,4 +1,4 @@
-package receipt_scanner_bot;
+package receipt_scanner_bot.service;
 
 import java.io.IOException;
 import java.util.List;
@@ -6,8 +6,12 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import receipt_scanner_bot.client.Client;
 import receipt_scanner_bot.dto.ProductDetailStatsDTO;
 import receipt_scanner_bot.dto.ProductStatsDTO;
+import receipt_scanner_bot.formatter.StatsFormatter;
+import receipt_scanner_bot.model.Product;
+import receipt_scanner_bot.parser.Parser;
 
 @Service
 public class ServiceImpl implements ReceiptService {

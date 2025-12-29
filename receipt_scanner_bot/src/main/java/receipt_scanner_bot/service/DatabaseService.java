@@ -1,4 +1,4 @@
-package receipt_scanner_bot;
+package receipt_scanner_bot.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +9,11 @@ import receipt_scanner_bot.dto.PriceHistoryDTO;
 import receipt_scanner_bot.dto.ProductDetailStatsDTO;
 import receipt_scanner_bot.dto.ProductStatsDTO;
 import receipt_scanner_bot.dto.TrendDTO;
+import receipt_scanner_bot.entities.ProductStatEntity;
+import receipt_scanner_bot.entities.PurchaseDetailEntity;
+import receipt_scanner_bot.model.Product;
+import receipt_scanner_bot.repository.ProductStatRepository;
+import receipt_scanner_bot.repository.PurchaseDetailRepository;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -25,8 +30,8 @@ public class DatabaseService {
     private final PurchaseDetailRepository purchaseDetailRepository;
     private final ProductStatRepository productStatRepository;
     
-    @PersistenceContext
-    private EntityManager entityManager;
+    //@PersistenceContext
+    //private EntityManager entityManager;
     
     public DatabaseService(PurchaseDetailRepository purchaseDetailRepository,
                           ProductStatRepository productStatRepository) {
@@ -57,7 +62,7 @@ public class DatabaseService {
     @Transactional(readOnly = true)
     public List<ProductStatsDTO> getStatsForAllProducts(Long chatId) {
     	
-    	entityManager.clear();
+    	//entityManager.flush();
     	
         List<PurchaseDetailEntity> allPurchases = purchaseDetailRepository
         		.findByChatIdOrderByPurchaseDateAscProductNameAsc(chatId);
@@ -93,6 +98,7 @@ public class DatabaseService {
             ))
             .values().stream()
             .sorted((p1, p2) -> p2.totalAmount().compareTo(p1.totalAmount()))
+            .limit(55)
             .collect(Collectors.toList());
     }
     

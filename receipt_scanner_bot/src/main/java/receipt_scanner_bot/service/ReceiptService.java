@@ -1,6 +1,6 @@
-package receipt_scanner_bot;
+package receipt_scanner_bot.service;
 
-interface ReceiptService {
+public interface ReceiptService {
 
 	String getStatsForAllProducts(Long chatId);
 	String getStatsForOneProduct(Long chatId, String productname);

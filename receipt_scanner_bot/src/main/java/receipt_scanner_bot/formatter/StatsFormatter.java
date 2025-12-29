@@ -1,4 +1,4 @@
-package receipt_scanner_bot;
+package receipt_scanner_bot.formatter;
 
 import java.util.List;
 
@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import receipt_scanner_bot.dto.PriceHistoryDTO;
 import receipt_scanner_bot.dto.ProductDetailStatsDTO;
 import receipt_scanner_bot.dto.ProductStatsDTO;
+import receipt_scanner_bot.model.Product;
 
 @Component
 public class StatsFormatter {

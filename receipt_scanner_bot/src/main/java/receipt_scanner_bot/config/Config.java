@@ -1,4 +1,4 @@
-package receipt_scanner_bot;
+package receipt_scanner_bot.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +9,7 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import okhttp3.logging.HttpLoggingInterceptor.Level;
+import receipt_scanner_bot.bot.Bot;
 
 @Configuration
 public class Config {

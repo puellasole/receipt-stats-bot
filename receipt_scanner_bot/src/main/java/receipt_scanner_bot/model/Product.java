@@ -1,8 +1,10 @@
-package receipt_scanner_bot;
+package receipt_scanner_bot.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+
+import receipt_scanner_bot.utils.Utils;
 
 public class Product {
 	

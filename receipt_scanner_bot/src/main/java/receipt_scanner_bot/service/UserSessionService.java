@@ -1,6 +1,8 @@
-package receipt_scanner_bot;
+package receipt_scanner_bot.service;
 
 import org.springframework.stereotype.Service;
+
+import receipt_scanner_bot.model.UserState;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

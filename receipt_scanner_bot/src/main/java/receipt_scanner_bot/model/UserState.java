@@ -1,4 +1,4 @@
-package receipt_scanner_bot;
+package receipt_scanner_bot.model;
 
 public enum UserState {
     DEFAULT,

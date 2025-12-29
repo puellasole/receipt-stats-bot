@@ -1,4 +1,4 @@
-package receipt_scanner_bot;
+package receipt_scanner_bot.entities;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
