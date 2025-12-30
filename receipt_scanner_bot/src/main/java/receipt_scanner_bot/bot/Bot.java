@@ -24,6 +24,7 @@ public class Bot extends TelegramLongPollingBot {
 	private static final String STATS = "/stats";
 	private static final String HELP = "/help";
 	private static final String PRODUCT_STATS = "/product_stats";
+	private static final String DELETE_PRODUCT = "/delete_product";
 	
 	@Autowired
 	private ReceiptService service;
@@ -55,6 +56,11 @@ public class Bot extends TelegramLongPollingBot {
             return;
         }
         
+        if (userState == UserState.WAITING_FOR_PRODUCT_TO_DELETE) {
+            processProductDelete(chatId, message);
+            return;
+        }
+        
 		switch(message) {
 			case START -> {
 				String userName = update.getMessage().getChat().getFirstName();
@@ -69,11 +75,30 @@ public class Bot extends TelegramLongPollingBot {
 			case PRODUCT_STATS -> {
 				productCommand(chatId);
 			}
+			case DELETE_PRODUCT -> {
+				deleteCommand(chatId);
+			}
 			case HELP -> helpCommand(chatId);
 			default -> unknownCommand(chatId);
 		}
 	}
 	
+	private void processProductDelete(Long chatId, String productToDelete) {
+		try {
+	        String result = service.deleteProduct(chatId, productToDelete);
+	        sendMessage(chatId, result);
+	    } catch (Exception e) {
+	        sendMessage(chatId, "❌ Ошибка при удалении продукта: " + e.getMessage());
+	    } finally {
+	        userSessionService.clearUserState(chatId);
+	    }
+	}
+
+	private void deleteCommand(Long chatId) {
+		userSessionService.setUserState(chatId, UserState.WAITING_FOR_PRODUCT_TO_DELETE);
+        sendMessage(chatId, "📷 Напишите название продукта для удаления:");
+	}
+
 	private void processProductStat(Long chatId, String productName) {
 		try {
 	        String result = service.getStatsForOneProduct(chatId, productName);
@@ -83,16 +108,6 @@ public class Bot extends TelegramLongPollingBot {
 	    } finally {
 	        userSessionService.clearUserState(chatId);
 	    }
-		/*
-		try {
-			userSessionService.clearUserState(chatId);
-			String result = service.getStatsForOneProduct(chatId, productName);
-			sendMessage(chatId, result);
-		} catch (Exception e) {
-			sendMessage(chatId, "❌ Ошибка при обработке продукта: " + e.getMessage());
-            userSessionService.clearUserState(chatId);
-		}
-		*/
 	}
 	
 	private void processReceiptQr(Long chatId, String qrCode) {

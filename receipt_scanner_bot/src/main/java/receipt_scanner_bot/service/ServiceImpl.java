@@ -62,5 +62,12 @@ public class ServiceImpl implements ReceiptService {
             return "❌ Ошибка при обработке чека: " + e.getMessage();
         }
     }
+
+	@Override
+	public String deleteProduct(Long chatId, String productname) {
+		System.out.println("Мы зашли в метод делит");
+		String res = databaseService.deleteProduct(chatId, productname);
+		return res;
+	}
     
 }

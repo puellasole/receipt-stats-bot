@@ -59,6 +59,20 @@ public class DatabaseService {
         }
     }
     
+    @Transactional
+    public String deleteProduct(Long chatId, String productName) {
+    	
+        try {
+            purchaseDetailRepository.deleteByChatIdAndProductName(chatId, productName);
+            productStatRepository.deleteByChatIdAndProductName(chatId, productName);
+            
+            System.out.println("Продукт успешно удален");
+            return "Продукт успешно удален";
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to delete product", e);
+        }
+    }
+    
     @Transactional(readOnly = true)
     public List<ProductStatsDTO> getStatsForAllProducts(Long chatId) {
     	
